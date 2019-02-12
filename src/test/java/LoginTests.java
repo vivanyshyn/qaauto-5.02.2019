@@ -3,6 +3,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.Test;
 
+
 public class LoginTests {
 
     @Test
@@ -11,7 +12,7 @@ public class LoginTests {
 
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("useAutomationExtension", false);
-        options.addArguments("--start-maximized");
+        //options.addArguments("--start-maximized");
         WebDriver driver = new ChromeDriver(options);
         driver.get("https://www.linkedin.com/");
 
