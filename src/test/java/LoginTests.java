@@ -4,39 +4,53 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 
 public class LoginTests {
 
-    @Test
-    public void successfulLoginTest() throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\WZHIVY\\IdeaProjects\\qaauto-5.02.2019\\chromedriver.exe");
+    WebDriver driver;
 
+    @BeforeMethod
+    public void beforeMethod(){
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\WZHIVY\\IdeaProjects\\qaauto-5.02.2019\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("useAutomationExtension", false);
         //options.addArguments("--start-maximized");
-        WebDriver driver = new ChromeDriver(options);
+        driver = new ChromeDriver(options);
         driver.get("https://www.linkedin.com/");
+    }
 
-        String email="sslava543@gmail.com";
-        String password="qwerty12345";
-        String searchItem="Viacheslav";
+    @AfterMethod
+    public void afterMethod(){
+        driver.quit(); //close browser
+        //driver.close(); //close current tab
+    }
 
-        WebElement loginField = driver.findElement(By.xpath("//input[@class='login-email reg-field__input']"));
-        loginField.sendKeys(email);
-        WebElement passwordField = driver.findElement(By.xpath("//input[@class='login-password reg-field__input']"));
-        passwordField.sendKeys(password);
-        WebElement submitButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
-        submitButton.click();
+    @Test
+    public void successfulLoginTest() throws InterruptedException {
+        WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
+        WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
+        WebElement signInButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
+
+        userEmailField.sendKeys("sslava543@gmail.com");
+        userPasswordField.sendKeys("qwerty12345");
+        signInButton.click();
 
         Thread.sleep(1000);
 
-        WebElement leftProfileBlock = driver.findElement(By.xpath("//div[@class='feed-identity-module__actor-meta profile-rail-card__actor-meta break-words']"));
+        WebElement profileMenuItem = driver.findElement(By.xpath("//li[@id='profile-nav-item']"));
 
-        Boolean testBoolean = leftProfileBlock.getText().toLowerCase().contains(searchItem.toLowerCase());
-        Assert.assertTrue (testBoolean, searchItem + " not found");
-        //driver.close();
+        Assert.assertTrue(profileMenuItem.isDisplayed(),
+                "profileMenuItem is not displayed on Home page.");
+        Assert.assertEquals(driver.getCurrentUrl(), "https://www.linkedin.com/feed/",
+                "Home page URL is incorrect");
+    }
+
+    @Test
+    public void negativeLoginTest(){
 
     }
 }

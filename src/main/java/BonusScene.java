@@ -27,7 +27,7 @@ public class BonusScene {
         element.click();
 
         element = driver.findElement(By.id("LoginForm_login"));
-        element.sendKeys("aaabbb");
+        element.sendKeys("aaa");
 
         element = driver.findElement(By.id("LoginForm_password"));
         element.sendKeys("bbb");
