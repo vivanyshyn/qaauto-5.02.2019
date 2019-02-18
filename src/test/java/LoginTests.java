@@ -28,7 +28,7 @@ public class LoginTests {
         driver.quit();
     }
 
-    @Test
+    @Test (priority=1)
     public void successfulLoginTest() throws InterruptedException {
         WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
         WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
@@ -48,7 +48,7 @@ public class LoginTests {
                 "Home page URL is incorrect");
     }
 
-    @Test
+    @Test (priority=2)
     public void incorrectEmailLoginTest() throws InterruptedException {
         WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
         WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
@@ -71,7 +71,7 @@ public class LoginTests {
                 "Error message for incorrect username is missing");
     }
 
-        @Test
+        @Test (priority=3)
         public void incorrectPasswordLoginTest() {
             WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
             WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
@@ -95,8 +95,8 @@ public class LoginTests {
                     "Error message for incorrect password is missing");
         }
 
-    @Test
-    public void emptyCredentialsLoginTest() throws InterruptedException {
+    @Test (priority=4)
+    public void emptyCredentialsLoginTest() {
         WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
         WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
         WebElement signInButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
