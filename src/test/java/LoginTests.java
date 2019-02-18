@@ -14,7 +14,7 @@ public class LoginTests {
     WebDriver driver;
 
     @BeforeMethod
-    public void beforeMethod(){
+    public void beforeMethod() throws InterruptedException {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\WZHIVY\\IdeaProjects\\qaauto-5.02.2019\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("useAutomationExtension", false);
@@ -25,8 +25,7 @@ public class LoginTests {
 
     @AfterMethod
     public void afterMethod(){
-        driver.quit(); //close browser
-        //driver.close(); //close current tab
+        driver.quit();
     }
 
     @Test
@@ -39,7 +38,7 @@ public class LoginTests {
         userPasswordField.sendKeys("qwerty12345");
         signInButton.click();
 
-        Thread.sleep(1000);
+        Thread.sleep(500);
 
         WebElement profileMenuItem = driver.findElement(By.xpath("//li[@id='profile-nav-item']"));
 
@@ -50,7 +49,80 @@ public class LoginTests {
     }
 
     @Test
-    public void negativeLoginTest(){
+    public void incorrectEmailLoginTest() throws InterruptedException {
+        WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
+        WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
+        WebElement signInButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
 
+        userEmailField.sendKeys("wrongMail1564@gmail.com");
+        userPasswordField.sendKeys("qwerty12345");
+        signInButton.click();
+
+        Thread.sleep(500);
+
+        WebElement errorForUserName = driver.findElement(By.xpath("//div[@id='error-for-username']"));
+        Assert.assertEquals(driver.getCurrentUrl(),
+                "https://www.linkedin.com/uas/login-submit?loginSubmitSource=GUEST_HOME",
+                "Warning page is incorrect");
+        Assert.assertTrue(errorForUserName.isDisplayed(),
+                "Error message is not displayed");
+        Assert.assertEquals(errorForUserName.getText(),
+                "Hmm, we don't recognize that email. Please try again.",
+                "Error message for incorrect username is missing");
     }
+
+        @Test
+        public void incorrectPasswordLoginTest() {
+            WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
+            WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
+            WebElement signInButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
+
+            userEmailField.sendKeys("sslava543@gmail.com");
+            userPasswordField.sendKeys("12345");
+            signInButton.click();
+
+            WebElement errorForPassword = driver.findElement(By.xpath("//div[@id='error-for-password']"));
+
+            Assert.assertEquals(driver.getCurrentUrl(),
+                    "https://www.linkedin.com/uas/login-submit?loginSubmitSource=GUEST_HOME",
+                    "Warning page is incorrect");
+
+            Assert.assertTrue(errorForPassword.isDisplayed(),
+                    "Error message is not displayed");
+
+            Assert.assertEquals(errorForPassword.getText(),
+                    "Hmm, that's not the right password. Please try again or request a new one.",
+                    "Error message for incorrect password is missing");
+        }
+
+    @Test
+    public void emptyCredentialsLoginTest() throws InterruptedException {
+        WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
+        WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
+        WebElement signInButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
+
+        userEmailField.sendKeys("");
+        userPasswordField.sendKeys("");
+        signInButton.click();
+
+        Assert.assertFalse(signInButton.isEnabled(),
+                "SignIn Button is not disabled (email and password fields are empty both)");
+
+
+        userEmailField.sendKeys("sslava543@gmail.com");
+        userPasswordField.sendKeys("");
+        signInButton.click();
+
+        Assert.assertFalse(signInButton.isEnabled(),
+                "SignIn Button is not disabled (password field is empty)");
+
+        userEmailField.clear();
+        userEmailField.sendKeys("");
+        userPasswordField.sendKeys("aaa");
+        signInButton.click();
+
+        Assert.assertFalse(signInButton.isEnabled(),
+                "SignIn Button is not disabled (email field is empty)");
+    }
+
 }
