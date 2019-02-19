@@ -24,11 +24,11 @@ public class LoginTests {
     }
 
     @AfterMethod
-    public void afterMethod(){
+    public void afterMethod() {
         driver.quit();
     }
 
-    @Test (priority=1)
+    @Test(priority = 1)
     public void successfulLoginTest() throws InterruptedException {
         WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
         WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
@@ -48,7 +48,7 @@ public class LoginTests {
                 "Home page URL is incorrect");
     }
 
-    @Test (priority=2)
+    @Test(priority = 2)
     public void incorrectEmailLoginTest() throws InterruptedException {
         WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
         WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
@@ -61,9 +61,7 @@ public class LoginTests {
         Thread.sleep(500);
 
         WebElement errorForUserName = driver.findElement(By.xpath("//div[@id='error-for-username']"));
-        Assert.assertEquals(driver.getCurrentUrl(),
-                "https://www.linkedin.com/uas/login-submit?loginSubmitSource=GUEST_HOME",
-                "Warning page is incorrect");
+        
         Assert.assertTrue(errorForUserName.isDisplayed(),
                 "Error message is not displayed");
         Assert.assertEquals(errorForUserName.getText(),
@@ -71,31 +69,27 @@ public class LoginTests {
                 "Error message for incorrect username is missing");
     }
 
-        @Test (priority=3)
-        public void incorrectPasswordLoginTest() {
-            WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
-            WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
-            WebElement signInButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
+    @Test(priority = 3)
+    public void incorrectPasswordLoginTest() {
+        WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
+        WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
+        WebElement signInButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
 
-            userEmailField.sendKeys("sslava543@gmail.com");
-            userPasswordField.sendKeys("12345");
-            signInButton.click();
+        userEmailField.sendKeys("sslava543@gmail.com");
+        userPasswordField.sendKeys("12345");
+        signInButton.click();
 
-            WebElement errorForPassword = driver.findElement(By.xpath("//div[@id='error-for-password']"));
+        WebElement errorForPassword = driver.findElement(By.xpath("//div[@id='error-for-password']"));
 
-            Assert.assertEquals(driver.getCurrentUrl(),
-                    "https://www.linkedin.com/uas/login-submit?loginSubmitSource=GUEST_HOME",
-                    "Warning page is incorrect");
+        Assert.assertTrue(errorForPassword.isDisplayed(),
+                "Error message is not displayed");
 
-            Assert.assertTrue(errorForPassword.isDisplayed(),
-                    "Error message is not displayed");
+        Assert.assertEquals(errorForPassword.getText(),
+                "Hmm, that's not the right password. Please try again or request a new one.",
+                "Error message for incorrect password is missing");
+    }
 
-            Assert.assertEquals(errorForPassword.getText(),
-                    "Hmm, that's not the right password. Please try again or request a new one.",
-                    "Error message for incorrect password is missing");
-        }
-
-    @Test (priority=4)
+    @Test(priority = 4)
     public void emptyCredentialsLoginTest() {
         WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
         WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
