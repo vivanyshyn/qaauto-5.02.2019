@@ -6,7 +6,10 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import javax.swing.*;
 
 
 public class LoginTests {
@@ -14,7 +17,7 @@ public class LoginTests {
     WebDriver driver;
 
     @BeforeMethod
-    public void beforeMethod() throws InterruptedException {
+    public void beforeMethod() {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\WZHIVY\\IdeaProjects\\qaauto-5.02.2019\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("useAutomationExtension", false);
@@ -24,99 +27,57 @@ public class LoginTests {
     }
 
     @AfterMethod
-    public void afterMethod() {
-        driver.quit();
+    public void afterMethod() { driver.quit(); }
+
+    @DataProvider
+    public Object[][] validData() {
+        return new Object[][]{
+                {"sslava543@gmail.com", "qwerty12345"},
+                {"sslava543@GMAIL.com", "qwerty12345"},
+                {" sslava543@gmail.com ", "qwerty12345"},
+        };
     }
 
-    @Test(priority = 1)
-    public void successfulLoginTest() throws InterruptedException {
-        WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
-        WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
-        WebElement signInButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
+    @DataProvider
+    public Object[][] invalidData() {
+        return new Object[][]{
+                {"12345sslava543@gmail.com", "qwerty12345",
+                        "Hmm, we don't recognize that email. Please try again.",
+                        ""},
+                {"sslava543@gmail.com", "qwerty123456",
+                        "",
+                        "Hmm, that's not the right password. Please try again or request a new one."},
 
-        userEmailField.sendKeys("sslava543@gmail.com");
-        userPasswordField.sendKeys("qwerty12345");
-        signInButton.click();
-
-        Thread.sleep(500);
-
-        WebElement profileMenuItem = driver.findElement(By.xpath("//li[@id='profile-nav-item']"));
-
-        Assert.assertTrue(profileMenuItem.isDisplayed(),
-                "profileMenuItem is not displayed on Home page.");
-        Assert.assertEquals(driver.getCurrentUrl(), "https://www.linkedin.com/feed/",
-                "Home page URL is incorrect");
+        };
     }
 
-    @Test(priority = 2)
-    public void incorrectEmailLoginTest() throws InterruptedException {
-        WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
-        WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
-        WebElement signInButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
 
-        userEmailField.sendKeys("wrongMail1564@gmail.com");
-        userPasswordField.sendKeys("qwerty12345");
-        signInButton.click();
+    @Test(dataProvider="validData", priority=1)
+    public void successfulLoginTest(String userEmail, String userPassword) {
 
-        Thread.sleep(500);
+        LandingPage landingPage = new LandingPage(driver);
+        Assert.assertTrue(landingPage.isPageLoaded(), "Landing page is not loaded.");
+        landingPage.login(userEmail, userPassword);
 
-        WebElement errorForUserName = driver.findElement(By.xpath("//div[@id='error-for-username']"));
-        
-        Assert.assertTrue(errorForUserName.isDisplayed(),
-                "Error message is not displayed");
-        Assert.assertEquals(errorForUserName.getText(),
-                "Hmm, we don't recognize that email. Please try again.",
-                "Error message for incorrect username is missing");
+        HomePage homePage = new HomePage(driver);
+        Assert.assertTrue(homePage.isPageLoaded(),
+                "Home page is not loaded.");
     }
 
-    @Test(priority = 3)
-    public void incorrectPasswordLoginTest() {
-        WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
-        WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
-        WebElement signInButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
+    @Test (dataProvider="invalidData")
+    public void negativeLoginTest (String userEmail, String userPassword, String emailValidationMessage, String passwordValidationMessage) throws InterruptedException {
+        LandingPage landingPage = new LandingPage(driver);
+        landingPage.login(userEmail, userPassword);
 
-        userEmailField.sendKeys("sslava543@gmail.com");
-        userPasswordField.sendKeys("12345");
-        signInButton.click();
+        SubmitPage submitPage = new SubmitPage(driver);
 
-        WebElement errorForPassword = driver.findElement(By.xpath("//div[@id='error-for-password']"));
+        Assert.assertTrue(submitPage.isPageLoaded(), "Submit Page is not loaded");
 
-        Assert.assertTrue(errorForPassword.isDisplayed(),
-                "Error message is not displayed");
-
-        Assert.assertEquals(errorForPassword.getText(),
-                "Hmm, that's not the right password. Please try again or request a new one.",
-                "Error message for incorrect password is missing");
-    }
-
-    @Test(priority = 4)
-    public void emptyCredentialsLoginTest() {
-        WebElement userEmailField = driver.findElement(By.xpath("//input[@id='login-email']"));
-        WebElement userPasswordField = driver.findElement(By.xpath("//input[@id='login-password']"));
-        WebElement signInButton = driver.findElement(By.xpath("//input[@id='login-submit']"));
-
-        userEmailField.sendKeys("");
-        userPasswordField.sendKeys("");
-        signInButton.click();
-
-        Assert.assertFalse(signInButton.isEnabled(),
-                "SignIn Button is not disabled (email and password fields are empty both)");
-
-
-        userEmailField.sendKeys("sslava543@gmail.com");
-        userPasswordField.sendKeys("");
-        signInButton.click();
-
-        Assert.assertFalse(signInButton.isEnabled(),
-                "SignIn Button is not disabled (password field is empty)");
-
-        userEmailField.clear();
-        userEmailField.sendKeys("");
-        userPasswordField.sendKeys("aaa");
-        signInButton.click();
-
-        Assert.assertFalse(signInButton.isEnabled(),
-                "SignIn Button is not disabled (email field is empty)");
+        if (emailValidationMessage !="") {
+        Assert.assertTrue(submitPage.isEmailValidationMessageDisplayed(emailValidationMessage), "Email Validation message on SubmitPage is missing or incorrect");
+        } else {
+        Assert.assertTrue(submitPage.isPasswordValidationMessageDisplayed(passwordValidationMessage), "Password Validation message on SubmitPage is missing or incorrect");
+        }
     }
 
 }
