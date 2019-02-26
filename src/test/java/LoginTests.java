@@ -1,6 +1,4 @@
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
@@ -9,12 +7,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import javax.swing.*;
-
 
 public class LoginTests {
 
     WebDriver driver;
+    LandingPage landingPage;
 
     @BeforeMethod
     public void beforeMethod() {
@@ -24,6 +21,8 @@ public class LoginTests {
         //options.addArguments("--start-maximized");
         driver = new ChromeDriver(options);
         driver.get("https://www.linkedin.com/");
+        landingPage = new LandingPage(driver);
+
     }
 
     @AfterMethod
@@ -52,32 +51,32 @@ public class LoginTests {
     }
 
 
-    @Test(dataProvider="validData", priority=1)
+    @Test(dataProvider="validData")
     public void successfulLoginTest(String userEmail, String userPassword) {
-
-        LandingPage landingPage = new LandingPage(driver);
         Assert.assertTrue(landingPage.isPageLoaded(), "Landing page is not loaded.");
-        landingPage.login(userEmail, userPassword);
 
-        HomePage homePage = new HomePage(driver);
+        HomePage homePage = landingPage.login(userEmail, userPassword);
         Assert.assertTrue(homePage.isPageLoaded(),
                 "Home page is not loaded.");
     }
 
     @Test (dataProvider="invalidData")
-    public void negativeLoginTest (String userEmail, String userPassword, String emailValidationMessage, String passwordValidationMessage) throws InterruptedException {
-        LandingPage landingPage = new LandingPage(driver);
-        landingPage.login(userEmail, userPassword);
+    public void negativeLoginTest (String userEmail,
+                                   String userPassword,
+                                   String emailValidationMessage,
+                                   String passwordValidationMessage) {
 
-        SubmitPage submitPage = new SubmitPage(driver);
+        LoginSubmitPage loginSubmitPage = landingPage.loginSubmit(userEmail, userPassword);
 
-        Assert.assertTrue(submitPage.isPageLoaded(), "Submit Page is not loaded");
+        Assert.assertTrue(loginSubmitPage.isPageLoaded(), "Submit Page is not loaded");
 
-        if (emailValidationMessage !="") {
-        Assert.assertTrue(submitPage.isEmailValidationMessageDisplayed(emailValidationMessage), "Email Validation message on SubmitPage is missing or incorrect");
-        } else {
-        Assert.assertTrue(submitPage.isPasswordValidationMessageDisplayed(passwordValidationMessage), "Password Validation message on SubmitPage is missing or incorrect");
-        }
+        Assert.assertEquals(loginSubmitPage.getUserEmailValidationText(),
+                emailValidationMessage,
+                "userEmail validation message text is wrong");
+
+        Assert.assertEquals(loginSubmitPage.getUserPasswordValidationText(),
+                passwordValidationMessage,
+                "userEmail validation message text is wrong");
     }
 
 }

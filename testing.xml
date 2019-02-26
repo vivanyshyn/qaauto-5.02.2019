@@ -1,9 +1,14 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="Suite1" verbose="1" >
-    <test name="LoginTests">
+<suite name="LinkedIn Tests" verbose="1" >
+    <test name="SmokeTests">
         <classes>
-            <class name="LoginTests"/>
+            <class name="LoginTests">
+                <methods>
+                    <exclude name="successfulLoginTest"/>
+                    <include name="negativeLoginTest"/>
+                </methods>
+            </class>
         </classes>
     </test>
 </suite>
