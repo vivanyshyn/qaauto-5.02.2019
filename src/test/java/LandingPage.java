@@ -21,23 +21,18 @@ public class LandingPage {
         PageFactory.initElements(driver, this);
     }
 
-    public HomePage login(String userEmail, String userPassword) {
+    public <T> T login(String userEmail, String userPassword, Class<T> expectedPage) {
         userEmailField.sendKeys(userEmail);
         userPasswordField.sendKeys(userPassword);
         signInButton.click();
-        return new HomePage(driver);
+        return PageFactory.initElements(driver, expectedPage);
     }
 
-    public LoginSubmitPage loginSubmit(String userEmail, String userPassword) {
-        userEmailField.sendKeys(userEmail);
-        userPasswordField.sendKeys(userPassword);
-        signInButton.click();
-        return new LoginSubmitPage(driver);
-    }
 
     public boolean isPageLoaded() {
         return signInButton.isDisplayed()
                 && driver.getCurrentUrl().equals("https://www.linkedin.com/")
                 && driver.getTitle().equals("LinkedIn: Log In or Sign Up");
     }
+
 }

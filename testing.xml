@@ -5,7 +5,7 @@
         <classes>
             <class name="LoginTests">
                 <methods>
-                    <exclude name="successfulLoginTest"/>
+                    <include name="successfulLoginTest"/>
                     <include name="negativeLoginTest"/>
                 </methods>
             </class>
