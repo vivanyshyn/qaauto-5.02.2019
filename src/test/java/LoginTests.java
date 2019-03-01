@@ -1,32 +1,9 @@
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 
-public class LoginTests {
-
-    WebDriver driver;
-    LandingPage landingPage;
-
-    @BeforeMethod
-    public void beforeMethod() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\WZHIVY\\IdeaProjects\\qaauto-5.02.2019\\chromedriver.exe");
-        ChromeOptions options = new ChromeOptions();
-        options.setExperimentalOption("useAutomationExtension", false);
-        //options.addArguments("--start-maximized");
-        driver = new ChromeDriver(options);
-        driver.get("https://www.linkedin.com/");
-        landingPage = new LandingPage(driver);
-
-    }
-
-    @AfterMethod
-    public void afterMethod() { driver.quit(); }
+public class LoginTests extends BaseTest {
 
     @DataProvider
     public Object[][] validData() {
@@ -55,7 +32,9 @@ public class LoginTests {
     public void successfulLoginTest(String userEmail, String userPassword) {
         Assert.assertTrue(landingPage.isPageLoaded(), "Landing page is not loaded.");
 
-        HomePage homePage = landingPage.login(userEmail, userPassword, HomePage.class);
+        //HomePage homePage = landingPage.login2(userEmail, userPassword, HomePage.class);
+
+        HomePage homePage = landingPage.login(userEmail, userPassword);
         Assert.assertTrue(homePage.isPageLoaded(),
                 "Home page is not loaded.");
     }
@@ -67,6 +46,8 @@ public class LoginTests {
                                    String passwordValidationMessage) {
 
         LoginSubmitPage loginSubmitPage = landingPage.login(userEmail, userPassword, LoginSubmitPage.class);
+
+        //LoginSubmitPage loginSubmitPage = landingPage.login(userEmail, userPassword);
 
 
         Assert.assertTrue(loginSubmitPage.isPageLoaded(), "Submit Page is not loaded");

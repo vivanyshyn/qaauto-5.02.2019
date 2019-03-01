@@ -1,4 +1,3 @@
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -21,10 +20,22 @@ public class LandingPage {
         PageFactory.initElements(driver, this);
     }
 
-    public <T> T login(String userEmail, String userPassword, Class<T> expectedPage) {
+    public <GenericPage> GenericPage login (String userEmail, String userPassword){
         userEmailField.sendKeys(userEmail);
         userPasswordField.sendKeys(userPassword);
         signInButton.click();
+        if (driver.getCurrentUrl().contains("/feed")){
+            return (GenericPage) new HomePage (driver);
+        } else {
+            return (GenericPage) new LoginSubmitPage (driver);
+        }
+    }
+
+    public <T> T login (String userEmail, String userPassword, Class<T> expectedPage) {
+        userEmailField.sendKeys(userEmail);
+        userPasswordField.sendKeys(userPassword);
+        signInButton.click();
+        //return (T) new expectedPage.class;
         return PageFactory.initElements(driver, expectedPage);
     }
 
