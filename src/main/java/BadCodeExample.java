@@ -5,12 +5,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import javax.mail.MessagingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
 
 public class BadCodeExample {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, MessagingException {
+
         System.out.println("Hello World!");
 
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\WZHIVY\\IdeaProjects\\qaauto-5.02.2019\\chromedriver.exe");
@@ -46,5 +49,6 @@ public class BadCodeExample {
         }
         System.out.println("Results count: " + searchResultElements.size());
         driver.close();
+
     }
 }

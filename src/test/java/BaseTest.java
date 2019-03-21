@@ -21,6 +21,6 @@ public class BaseTest {
     }
 
     @AfterMethod
-    public void afterMethod() { driver.quit(); }
+    public void afterMethod() { /*driver.quit();*/ }
 
 }

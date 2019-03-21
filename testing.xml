@@ -5,8 +5,13 @@
         <classes>
             <class name="LoginTests">
                 <methods>
-                    <include name="successfulLoginTest"/>
-                    <include name="negativeLoginTest"/>
+                    <exclude name="successfulLoginTest"/>
+                    <exclude name="negativeLoginTest"/>
+                </methods>
+            </class>
+            <class name="SearchTests">
+                <methods>
+                    <include name="basicSearchTest"/>
                 </methods>
             </class>
         </classes>
