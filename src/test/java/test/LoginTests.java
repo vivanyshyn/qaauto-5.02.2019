@@ -1,6 +1,10 @@
+package test;
+
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import page.HomePage;
+import page.LoginSubmitPage;
 
 
 public class LoginTests extends BaseTest {
@@ -32,7 +36,7 @@ public class LoginTests extends BaseTest {
     public void successfulLoginTest(String userEmail, String userPassword) {
         Assert.assertTrue(landingPage.isPageLoaded(), "Landing page is not loaded.");
 
-        //HomePage homePage = landingPage.login2(userEmail, userPassword, HomePage.class);
+        //page.HomePage homePage = landingPage.login2(userEmail, userPassword, page.HomePage.class);
 
         HomePage homePage = landingPage.login(userEmail, userPassword);
         Assert.assertTrue(homePage.isPageLoaded(),
@@ -47,7 +51,7 @@ public class LoginTests extends BaseTest {
 
         LoginSubmitPage loginSubmitPage = landingPage.login(userEmail, userPassword, LoginSubmitPage.class);
 
-        //LoginSubmitPage loginSubmitPage = landingPage.login(userEmail, userPassword);
+        //page.LoginSubmitPage loginSubmitPage = landingPage.login(userEmail, userPassword);
 
 
         Assert.assertTrue(loginSubmitPage.isPageLoaded(), "Submit Page is not loaded");

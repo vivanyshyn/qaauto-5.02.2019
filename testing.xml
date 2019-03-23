@@ -3,13 +3,13 @@
 <suite name="LinkedIn Tests" verbose="1" >
     <test name="SmokeTests">
         <classes>
-            <class name="LoginTests">
+            <class name="test.LoginTests">
                 <methods>
                     <exclude name="successfulLoginTest"/>
                     <exclude name="negativeLoginTest"/>
                 </methods>
             </class>
-            <class name="SearchTests">
+            <class name="test.SearchTests">
                 <methods>
                     <include name="basicSearchTest"/>
                 </methods>

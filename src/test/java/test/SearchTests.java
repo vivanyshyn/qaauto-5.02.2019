@@ -1,7 +1,9 @@
+package test;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.List;
+import page.HomePage;
+import page.SearchPage;
 
 public class SearchTests extends BaseTest {
     @Test
